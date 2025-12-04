@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProjectShobdo - Open Bengali Dictionary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-light: #ddd6fe;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-center: center;
+            margin-bottom: 40px;
+        }
+
+        .banner {
+            max-width: 100%;
+            height: auto;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .search-box {
+            position: sticky;
+            top: 20px;
+            background: var(--bg);
+            padding: 10px 0;
+            z-index: 10;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 24px;
+            font-size: 18px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: inherit;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        #loading {
+            text-align: center;
+            color: var(--text-muted);
+            margin-top: 20px;
+        }
+
+        #results {
+            display: grid;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .word-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 8px;
+        }
+
+        .word {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .pos {
+            font-size: 14px;
+            color: var(--text-muted);
+            background: var(--bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .meaning {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .meta {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .highlight {
+            background-color: #fef08a;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="assets/banner.png" alt="Project Shobdo" class="banner">
+            <p style="color: var(--text-muted);">Open Bengali Lexical Corpus</p>
+        </header>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="শব্দ খুঁজুন... (Search words)" disabled>
+        </div>
+
+        <div id="loading">Loading dictionary data... (4MB)</div>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        let dictionary = [];
+        const searchInput = document.getElementById('searchInput');
+        const resultsDiv = document.getElementById('results');
+        const loadingDiv = document.getElementById('loading');
+
+        // Load Dictionary
+        fetch('dist/json/dictionary.min.json')
+            .then(response => response.json())
+            .then(data => {
+                dictionary = data;
+                loadingDiv.style.display = 'none';
+                searchInput.disabled = false;
+                searchInput.focus();
+                showRandomWords();
+            })
+            .catch(err => {
+                loadingDiv.textContent = 'Error loading dictionary. Please refresh.';
+                console.error(err);
+            });
+
+        // Search Logic
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.trim().toLowerCase();
+            if (!query) {
+                showRandomWords();
+                return;
+            }
+            
+            const results = dictionary.filter(entry => {
+                const word = entry.word.toLowerCase();
+                const eng = (entry.english_translation || '').toLowerCase();
+                return word.includes(query) || eng.includes(query);
+            }).slice(0, 50);
+
+            renderResults(results);
+        });
+
+        function renderResults(entries) {
+            if (entries.length === 0) {
+                resultsDiv.innerHTML = '<div style="text-align:center; color:var(--text-muted)">No results found</div>';
+                return;
+            }
+
+            resultsDiv.innerHTML = entries.map(entry => `
+                <div class="card">
+                    <div class="word-header">
+                        <span class="word">${entry.word}</span>
+                        <span class="pos">${entry.part_of_speech}</span>
+                    </div>
+                    <div class="meaning">${entry.meanings.join(', ')}</div>
+                    ${entry.english_translation ? `<div style="color:var(--text-muted)">${entry.english_translation}</div>` : ''}
+                    ${entry.examples && entry.examples.length > 0 ? `
+                        <div class="meta">
+                            Example: ${entry.examples[0]}
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function showRandomWords() {
+            const random = [];
+            for(let i=0; i<5; i++) {
+                random.push(dictionary[Math.floor(Math.random() * dictionary.length)]);
+            }
+            renderResults(random);
+        }
+    </script>
+</body>
+</html>
