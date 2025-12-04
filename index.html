@@ -3,225 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProjectShobdo - Open Bengali Dictionary</title>
+    <title>প্রজেক্ট শব্দ | Project Shobdo</title>
     <link rel="icon" href="assets/Favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-hover: #4f46e5;
-            --bg: #f8fafc;
+            --primary: #7c3aed; /* Brand Purple */
+            --primary-dark: #5b21b6;
+            --primary-light: #ddd6fe;
+            --bg: #faf5ff; /* Very light purple tint */
             --surface: #ffffff;
-            --text: #0f172a;
-            --text-secondary: #64748b;
-            --border: #e2e8f0;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --radius: 12px;
+            --text: #2e1065; /* Dark purple text */
+            --text-muted: #6d28d9;
+            --border: #e9d5ff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', 'Hind Siliguri', sans-serif;
+            font-family: 'Hind Siliguri', sans-serif;
             background-color: var(--bg);
             color: var(--text);
             line-height: 1.6;
-            padding: 20px;
+            padding: 40px 20px;
             min-height: 100vh;
+            background-image: radial-gradient(#e9d5ff 1px, transparent 1px);
+            background-size: 20px 20px;
         }
 
         .container {
-            max-width: 700px;
+            max-width: 800px;
             margin: 0 auto;
-            padding-bottom: 40px;
         }
 
         header {
             text-center: center;
-            margin-bottom: 40px;
-            animation: fadeIn 0.5s ease-out;
+            margin-bottom: 60px;
         }
 
         .banner {
             width: 100%;
+            max-width: 600px;
             height: auto;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-md);
-            transition: transform 0.3s ease;
-        }
-
-        .banner:hover {
-            transform: scale(1.01);
+            border-radius: 0; /* No rounded corners for artistic feel */
+            margin-bottom: 30px;
+            border: 2px solid var(--primary);
+            padding: 10px;
+            background: var(--surface);
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 3.5rem;
             font-weight: 700;
-            letter-spacing: -0.025em;
-            margin-bottom: 8px;
+            color: var(--primary);
+            margin-bottom: 10px;
+            line-height: 1.2;
         }
 
         .subtitle {
-            color: var(--text-secondary);
-            font-size: 1.1rem;
+            font-family: 'Playfair Display', serif;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            font-style: italic;
         }
 
         .search-container {
             position: sticky;
             top: 20px;
             z-index: 100;
-            margin-bottom: 32px;
+            margin-bottom: 50px;
         }
 
         .search-box {
-            position: relative;
             background: var(--surface);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-md);
-            transition: all 0.2s ease;
-        }
-
-        .search-box:focus-within {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            border: 2px solid var(--primary);
+            padding: 5px;
         }
 
         input {
             width: 100%;
-            padding: 18px 24px;
-            font-size: 18px;
-            border: 2px solid transparent;
-            border-radius: var(--radius);
-            font-family: inherit;
+            padding: 20px 24px;
+            font-size: 24px;
+            border: none;
+            font-family: 'Hind Siliguri', sans-serif;
             background: transparent;
             outline: none;
+            color: var(--primary-dark);
+            text-align: center;
         }
 
-        input:focus {
-            border-color: var(--primary);
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            pointer-events: none;
+        input::placeholder {
+            color: var(--primary-light);
+            opacity: 1;
         }
 
         #loading {
             text-align: center;
-            color: var(--text-secondary);
-            padding: 40px;
-            font-weight: 500;
-            animation: pulse 2s infinite;
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-top: 40px;
         }
 
         #results {
             display: grid;
-            gap: 16px;
+            gap: 24px;
         }
 
         .card {
             background: var(--surface);
-            padding: 24px;
-            border-radius: var(--radius);
+            padding: 30px;
             border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
+            border-left: 6px solid var(--primary);
             transition: all 0.2s ease;
-            animation: slideUp 0.3s ease-out forwards;
         }
 
         .card:hover {
+            transform: translateX(5px);
             border-color: var(--primary);
-            box-shadow: var(--shadow-md);
         }
 
         .word-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            border-bottom: 1px solid var(--bg);
-            padding-bottom: 12px;
+            align-items: baseline;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 15px;
         }
 
         .word {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
-            color: var(--text);
+            color: var(--primary-dark);
         }
 
         .pos-badge {
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 600;
-            color: var(--primary);
-            background: #e0e7ff;
-            padding: 4px 10px;
-            border-radius: 20px;
+            color: var(--surface);
+            background: var(--primary);
+            padding: 4px 12px;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
 
         .meaning {
-            font-size: 18px;
+            font-size: 20px;
             color: var(--text);
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            line-height: 1.8;
         }
 
         .meta-info {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 14px;
-            color: var(--text-secondary);
             background: var(--bg);
-            padding: 12px;
-            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            font-size: 15px;
         }
 
         .meta-row {
             display: flex;
-            gap: 8px;
+            gap: 10px;
+            margin-bottom: 5px;
         }
+
+        .meta-row:last-child { margin-bottom: 0; }
 
         .label {
-            font-weight: 600;
-            min-width: 70px;
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 80px;
         }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-light); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 2.5rem; }
+            .word { font-size: 24px; }
+            body { padding: 20px 10px; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
             <img src="assets/banner.png" alt="Project Shobdo" class="banner">
-            <h1>Project Shobdo</h1>
+            <h1>প্রজেক্ট শব্দ</h1>
             <p class="subtitle">Open Bengali Lexical Corpus</p>
         </header>
 
         <div class="search-container">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="শব্দ খুঁজুন... (Search words)" disabled>
-                <svg class="search-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" id="searchInput" placeholder="শব্দ খুঁজুন... (Search)" disabled>
             </div>
         </div>
 
-        <div id="loading">Loading dictionary data...</div>
+        <div id="loading">অভিধান লোড হচ্ছে... (Loading...)</div>
         <div id="results"></div>
     </div>
 
@@ -238,13 +220,13 @@
                 dictionary = data;
                 loadingDiv.style.display = 'none';
                 searchInput.disabled = false;
-                searchInput.placeholder = `Search among ${data.length.toLocaleString()} words...`;
+                searchInput.placeholder = `${data.length.toLocaleString()} টি শব্দের মধ্যে খুঁজুন...`;
                 searchInput.focus();
                 showRandomWords();
             })
             .catch(err => {
-                loadingDiv.textContent = 'Failed to load dictionary. Please refresh.';
-                loadingDiv.style.color = '#ef4444';
+                loadingDiv.textContent = 'ডাটা লোড করতে সমস্যা হয়েছে। রিফ্রেশ করুন।';
+                loadingDiv.style.color = 'red';
                 console.error(err);
             });
 
@@ -272,14 +254,14 @@
         function renderResults(entries) {
             if (entries.length === 0) {
                 resultsDiv.innerHTML = `
-                    <div style="text-align:center; padding: 40px; color:var(--text-secondary)">
-                        <p>No results found</p>
+                    <div style="text-align:center; padding: 40px; color:var(--text-muted)">
+                        <p>কোনো ফলাফল পাওয়া যায়নি (No results found)</p>
                     </div>`;
                 return;
             }
 
             resultsDiv.innerHTML = entries.map((entry, index) => `
-                <div class="card" style="animation-delay: ${index * 0.05}s">
+                <div class="card">
                     <div class="word-header">
                         <span class="word">${entry.word}</span>
                         <span class="pos-badge">${entry.part_of_speech}</span>
@@ -295,7 +277,7 @@
                         ` : ''}
                         ${entry.examples && entry.examples.length > 0 ? `
                             <div class="meta-row">
-                                <span class="label">Example:</span>
+                                <span class="label">উদাহরণ:</span>
                                 <span>${entry.examples[0]}</span>
                             </div>
                         ` : ''}
