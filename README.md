@@ -2,8 +2,6 @@
 
 ![Project Shobdo Banner](assets/banner.png)
 
-> **An openly released Bengali lexical corpus providing structured data for language preservation, linguistic research, and NLP development.**
-
 ProjectShobdo is a comprehensive, open-source initiative to modernize the Bengali language for the digital age. It provides a clean, structured, and multi-format dataset of over 45,000 Bengali words, complete with meanings, pronunciations, parts of speech, and etymologies.
 
 ## 📦 Dataset Formats
