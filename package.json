@@ -1,0 +1,21 @@
+{
+  "name": "project-shobdo",
+  "version": "1.0.0",
+  "description": "An openly released Bengali lexical corpus providing structured data for language preservation, linguistic research, and NLP development.",
+  "main": "index.js",
+  "scripts": {
+    "build": "node scripts/build.js"
+  },
+  "keywords": [
+    "bengali",
+    "dictionary",
+    "dataset",
+    "nlp",
+    "lexicon"
+  ],
+  "author": "Iseer",
+  "license": "CC-BY-SA-4.0",
+  "devDependencies": {
+    "better-sqlite3": "^11.5.0"
+  }
+}
